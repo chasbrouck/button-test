@@ -8,6 +8,10 @@ var ledPin = 11;
 rpio.open(buttonPin, rpio.INPUT, rpio.PULL_DOWN);
 rpio.open(ledPin, rpio.OUTPUT, rpio.LOW);
 
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
 function pollcb(cbpin) {
   var state = rpio.read(cbpin) ? 1 : 0;
 
@@ -21,3 +25,34 @@ function pollcb(cbpin) {
 }
 
 rpio.poll(buttonPin, pollcb);
+
+
+io.on('connection', function(socket){
+  //on user connect
+  io.emit('chat message', 'a new user has connected');
+  console.log('a new user has connected');
+
+  //on message
+  socket.on('chat message', function(msg){
+    io.emit('chat message', msg);
+    if (msg == 'button on') {
+      rpio.write(ledPin, rpio.HIGH);
+    }
+
+    if (msg == 'button off') {
+      rpio.write(ledPin, rpio.LOW);
+    }
+  });
+
+  //on disconnect
+  socket.on('disconnect', function(){
+    io.emit('chat message', 'user disconnected');
+  });
+
+});
+
+io.emit('some event', { for: 'everyone' });
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});

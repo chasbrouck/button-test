@@ -4,6 +4,7 @@ var buttonPin = 7;
 var ledPin = 11;
 
 rpio.open(buttonPin, rpio.INPUT, rpio.PULL_DOWN);
+rpio.open(ledPin, rpio.OUTPUT, rpio.LOW);
 
 function pollcb(cbpin) {
   var state = rpio.read(cbpin) ? 1 : 0;

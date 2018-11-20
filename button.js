@@ -1,6 +1,7 @@
 var rpio = require('rpio');
 var app = require('express')();
 var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var buttonPin = 7;
 var ledPin = 11;
@@ -18,9 +19,11 @@ function pollcb(cbpin) {
   if (state == 1) {
     console.log('button pressed');
     rpio.write(ledPin, rpio.HIGH);
+    io.emit('someone pressed the button', msg);
   } else {
     console.log('button released');
     rpio.write(ledPin, rpio.LOW);
+    io.emit('someone released the button', msg);
   }
 }
 

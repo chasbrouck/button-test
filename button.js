@@ -19,11 +19,11 @@ function pollcb(cbpin) {
   if (state == 1) {
     console.log('button pressed');
     rpio.write(ledPin, rpio.HIGH);
-    io.emit('someone pressed the button', msg);
+    io.emit('chat message', 'someone pressed the button');
   } else {
     console.log('button released');
     rpio.write(ledPin, rpio.LOW);
-    io.emit('someone released the button', msg);
+    io.emit('chat message', 'someone released the button');
   }
 }
 
